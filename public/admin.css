@@ -1,0 +1,61 @@
+body {
+  background: #111;
+  color: #fff;
+  font-family: sans-serif;
+  padding: 30px;
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+/* Ranking box */
+.ranking {
+  background: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+/* Rank rows */
+.rank {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+/* Highlight top ranks */
+.rank.first {
+  background: #2c2c00;
+  border: 1px solid gold;
+}
+
+.rank.second {
+  background: #222;
+}
+
+.rank.third {
+  background: #1a1a1a;
+}
+
+.rank span {
+  opacity: 0.9;
+}

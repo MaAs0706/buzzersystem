@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Master Dashboard</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <h1>Quiz Master</h1>
+
+  <!-- Join Session -->
+  <div id="join">
+    <input id="sessionId" placeholder="Session ID (e.g. QUIZ-101)" />
+    <button id="joinBtn">Start Session</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="hidden">
+    <h2>Session: <span id="sessionLabel"></span></h2>
+    <h3>Current Question: <span id="questionNo">1</span></h3>
+
+    <div class="controls">
+      <button id="nextQuestion">Next Question</button>
+      <button id="resetQuestion">Reset Question</button>
+    </div>
+
+    <h3>Buzz Ranking</h3>
+    <div id="buzzLog" class="ranking"></div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

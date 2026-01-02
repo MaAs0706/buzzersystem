@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Buzzer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Join Screen -->
+  <div id="join">
+    <h2>Join Quiz</h2>
+    <input id="sessionId" placeholder="Session ID" />
+    <input id="teamName" placeholder="Team Name" />
+    <button id="joinBtn">Join</button>
+  </div>
+
+  <!-- Buzzer Screen -->
+  <div id="buzzerScreen" class="hidden">
+    <h2 id="teamLabel"></h2>
+    <h3 id="status">Waiting...</h3>
+
+    <button id="buzzer" class="buzzer">BUZZ</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
