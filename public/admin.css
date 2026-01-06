@@ -192,21 +192,17 @@ button:hover {
   background: #0f172a;
 }
 
-/* Text inside rank */
+
 .rank span {
   opacity: 0.9;
 }
 
-/* =========================
-   HIDDEN
-========================= */
+
 .hidden {
   display: none;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+
 @media (max-width: 768px) {
   body {
     padding: 1.5rem;

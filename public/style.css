@@ -1,6 +1,4 @@
-/* =========================
-   ROOT VARIABLES
-========================= */
+
 :root {
   --primary: #2563eb;
   --primary-dark: #1e40af;
@@ -14,9 +12,7 @@
   --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* =========================
-   GLOBAL RESET
-========================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -33,9 +29,7 @@ body {
   justify-content: center;
 }
 
-/* =========================
-   COMMON CARD STYLE
-========================= */
+
 #join,
 #buzzerScreen {
   width: 100%;
@@ -47,9 +41,7 @@ body {
   text-align: center;
 }
 
-/* =========================
-   HEADINGS
-========================= */
+
 h2 {
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
@@ -60,9 +52,7 @@ h3 {
   color: var(--muted);
 }
 
-/* =========================
-   INPUTS
-========================= */
+
 input {
   width: 100%;
   padding: 0.9rem 1rem;
@@ -83,9 +73,7 @@ input:focus {
   border-color: var(--primary);
 }
 
-/* =========================
-   JOIN BUTTON
-========================= */
+
 #joinBtn {
   width: 100%;
   padding: 0.9rem;
@@ -104,18 +92,14 @@ input:focus {
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 
-/* =========================
-   TEAM LABEL
-========================= */
+
 #teamLabel {
   font-size: 1.4rem;
   margin-bottom: 0.5rem;
   color: var(--success);
 }
 
-/* =========================
-   BUZZER BUTTON
-========================= */
+
 .buzzer {
   width: 220px;
   height: 220px;
@@ -133,7 +117,7 @@ input:focus {
   transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
 
-/* PRESS EFFECT */
+
 .buzzer:active {
   transform: translateY(8px);
   box-shadow:
@@ -143,9 +127,7 @@ input:focus {
 
 }
 
-/* =========================
-   LOCKED / BUZZED STATE
-========================= */
+
 .buzzer.locked {
   background: radial-gradient(circle at top, #22c55e, #14532d);
   box-shadow:
@@ -155,24 +137,18 @@ input:focus {
 }
 
 
-/* =========================
-   STATUS TEXT
-========================= */
+
 #status {
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
 }
 
-/* =========================
-   HIDDEN CLASS
-========================= */
+
 .hidden {
   display: none;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
+
 @media (max-width: 480px) {
   .buzzer {
     width: 180px;

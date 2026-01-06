@@ -1,0 +1,58 @@
+body {
+  background: radial-gradient(circle at top, #1e293b, #020617);
+  color: #e5e7eb;
+  font-family: system-ui;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ---------- PODIUM ---------- */
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.podium-card {
+  width: 180px;
+  background: #111827;
+  border-radius: 16px 16px 0 0;
+  padding: 1rem;
+  transition: transform 0.6s ease, height 0.6s ease;
+}
+
+.podium-card.first {
+  height: 260px;
+  border: 2px solid gold;
+}
+
+.podium-card.second {
+  height: 210px;
+  border: 2px solid silver;
+}
+
+.podium-card.third {
+  height: 180px;
+  border: 2px solid #cd7f32;
+}
+
+.podium-card h2 {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.podium-card span {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+/* ---------- OTHERS ---------- */
+.rank {
+  background: #111827;
+  padding: 1rem;
+  margin-bottom: 0.6rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+}

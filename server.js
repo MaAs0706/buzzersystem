@@ -12,64 +12,49 @@ const PORT = 8080;
 const server = http.createServer((req, res) => {
   let filePath;
 
-  // ---------- ROUTES ----------
   if (req.url === "/" || req.url === "/admin") {
     filePath = path.join(__dirname, "public", "admin.html");
-  } 
-  else if (req.url === "/team") {
+  } else if (req.url === "/team") {
     filePath = path.join(__dirname, "public", "index.html");
-  } 
-  else {
+  } else if (req.url === "/scorer") {
+    filePath = path.join(__dirname, "public", "scorer.html");
+  } else if (req.url === "/leaderboard") {
+    filePath = path.join(__dirname, "public", "leaderboard.html");
+  } else {
     filePath = path.join(__dirname, "public", req.url);
   }
 
   const ext = path.extname(filePath);
-  const contentType =
+  const type =
     ext === ".html" ? "text/html" :
     ext === ".js" ? "text/javascript" :
     ext === ".css" ? "text/css" :
     "text/plain";
 
-  fs.readFile(filePath, (err, content) => {
+  fs.readFile(filePath, (err, data) => {
     if (err) {
       res.writeHead(404);
-      res.end("404 Not Found");
+      res.end("404");
     } else {
-      res.writeHead(200, { "Content-Type": contentType });
-      res.end(content);
+      res.writeHead(200, { "Content-Type": type });
+      res.end(data);
     }
   });
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`🌐 HTTP + WS server running on http://0.0.0.0:${PORT}`);
+  console.log(`🌐 Running on http://0.0.0.0:${PORT}`);
 });
 
-/* ===================== WEBSOCKET SERVER ===================== */
+/* ===================== WEBSOCKET ===================== */
 
 const wss = new WebSocket.Server({ server });
 
-/*
-sessions = {
-  sessionId: {
-    currentQuestion: Number,
-    questions: {
-      [qNo]: {
-        buzzes: [{ team, time }],
-        buzzedTeams: Set
-      }
-    },
-    clients: Set<WebSocket>
-  }
-}
-*/
 const sessions = {};
 
 wss.on("connection", (ws, req) => {
-  console.log("🔌 NEW WS CONNECTION:", req.url);
-
   const params = new URLSearchParams(req.url.replace("/?", ""));
-  const role = params.get("role");     // admin | team
+  const role = params.get("role"); // admin | team | scorer | viewer
   const sessionId = params.get("session");
   const team = params.get("team");
 
@@ -78,20 +63,15 @@ wss.on("connection", (ws, req) => {
     return;
   }
 
-  /* ---------- CREATE SESSION IF NEEDED ---------- */
-
   if (!sessions[sessionId]) {
     sessions[sessionId] = {
       currentQuestion: 1,
       questions: {
-        1: {
-          buzzes: [],
-          buzzedTeams: new Set()
-        }
+        1: { buzzes: [], buzzedTeams: new Set() }
       },
+      teams: {},   // score + history
       clients: new Set()
     };
-    console.log(`🆕 Session created: ${sessionId}`);
   }
 
   const session = sessions[sessionId];
@@ -100,11 +80,14 @@ wss.on("connection", (ws, req) => {
   ws.role = role;
   ws.team = team || null;
 
-  console.log(
-    `✅ CONNECTED → role=${role}, session=${sessionId}, team=${team || "-"}`
-  );
-
-  /* ---------- SEND INITIAL STATE TO ADMIN ---------- */
+  if (role === "team" && team) {
+    if (!session.teams[team]) {
+      session.teams[team] = {
+        score: 0,
+        history: {} // question → marks
+      };
+    }
+  }
 
   if (role === "admin") {
     ws.send(JSON.stringify({
@@ -114,40 +97,24 @@ wss.on("connection", (ws, req) => {
     }));
   }
 
-  /* ===================== MESSAGE HANDLER ===================== */
+  if (role === "scorer" || role === "viewer") {
+    sendLeaderboard(session, ws);
+  }
 
   ws.on("message", raw => {
-    console.log("📩 RAW MESSAGE:", raw.toString());
-
     let msg;
-    try {
-      msg = JSON.parse(raw.toString());
-    } catch {
-      return;
-    }
+    try { msg = JSON.parse(raw); } catch { return; }
 
     const qNo = session.currentQuestion;
     const question = session.questions[qNo];
 
-    /* ---------- TEAM BUZZ ---------- */
+    /* TEAM BUZZ */
     if (msg.type === "BUZZ" && role === "team") {
-      console.log("🚨 BUZZ FROM:", ws.team);
-
-      if (question.buzzedTeams.has(ws.team)) {
-        console.log("⛔ IGNORED (already buzzed):", ws.team);
-        return;
-      }
-
+      if (question.buzzedTeams.has(ws.team)) return;
       question.buzzedTeams.add(ws.team);
 
-      const buzz = {
-        team: ws.team,
-        time: Date.now()
-      };
-
+      const buzz = { team: ws.team, time: Date.now() };
       question.buzzes.push(buzz);
-
-      console.log("📊 CURRENT BUZZ LIST:", question.buzzes);
 
       broadcastAdmins(session, {
         type: "BUZZ_UPDATE",
@@ -156,67 +123,108 @@ wss.on("connection", (ws, req) => {
       });
     }
 
-    /* ---------- ADMIN: NEXT QUESTION ---------- */
+    /* ADMIN */
     if (msg.type === "NEXT_QUESTION" && role === "admin") {
-      session.currentQuestion += 1;
+      session.currentQuestion++;
       session.questions[session.currentQuestion] = {
         buzzes: [],
         buzzedTeams: new Set()
       };
-
       broadcast(session, {
         type: "NEW_QUESTION",
         question: session.currentQuestion
       });
-
-      console.log(`➡️ NEXT QUESTION → Q${session.currentQuestion}`);
     }
 
-    /* ---------- ADMIN: RESET QUESTION ---------- */
     if (msg.type === "RESET_QUESTION" && role === "admin") {
       question.buzzes = [];
       question.buzzedTeams.clear();
-
       broadcast(session, { type: "RESET" });
-
-      console.log(`🔄 RESET QUESTION → Q${qNo}`);
     }
+
+    /* SCORER */
+    if (msg.type === "UPDATE_SCORE" && role === "scorer") {
+  const teamData = session.teams[msg.team];
+  if (!teamData) return;
+
+  const qNo = session.currentQuestion;
+
+  // total score
+  teamData.score += msg.delta;
+
+  // per-question score
+  if (!teamData.history[qNo]) {
+    teamData.history[qNo] = 0;
+  }
+  teamData.history[qNo] += msg.delta;
+
+  console.log(
+    `📝 SCORE UPDATE → ${msg.team} | Q${qNo} | ${msg.delta}`
+  );
+  console.log("📚 HISTORY NOW:", teamData.history);
+
+  broadcastLeaderboard(session);
+}
+
   });
 
-  ws.on("close", () => {
-    session.clients.delete(ws);
-    console.log("❌ DISCONNECTED:", ws.team || ws.role);
-  });
+  ws.on("close", () => session.clients.delete(ws));
 });
 
 /* ===================== HELPERS ===================== */
 
 function broadcast(session, data) {
-  session.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(data));
+  session.clients.forEach(c => {
+    if (c.readyState === WebSocket.OPEN) {
+      c.send(JSON.stringify(data));
     }
   });
 }
 
 function broadcastAdmins(session, data) {
-  session.clients.forEach(client => {
-    if (
-      client.readyState === WebSocket.OPEN &&
-      client.role === "admin"
-    ) {
-      client.send(JSON.stringify(data));
+  session.clients.forEach(c => {
+    if (c.readyState === WebSocket.OPEN && c.role === "admin") {
+      c.send(JSON.stringify(data));
     }
   });
 }
 
-/* Convert Sets so admin can read state */
+function broadcastLeaderboard(session) {
+  const leaderboard = Object.entries(session.teams)
+    .map(([team, obj]) => ({
+      team,
+      score: obj.score,
+      history: obj.history || {}   // ✅ FORCE HISTORY
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  broadcast(session, {
+    type: "LEADERBOARD_UPDATE",
+    leaderboard
+  });
+
+  // 🔍 DEBUG LOG (IMPORTANT)
+  console.log("📤 LEADERBOARD SENT:", JSON.stringify(leaderboard, null, 2));
+}
+
+
+function sendLeaderboard(session, ws) {
+  ws.send(JSON.stringify({
+    type: "LEADERBOARD_UPDATE",
+    leaderboard: Object.entries(session.teams)
+      .map(([team, obj]) => ({
+        team,
+        score: obj.score,
+        history: obj.history
+      }))
+      .sort((a, b) => b.score - a.score)
+  }));
+}
+
 function serializeQuestions(questions) {
   const out = {};
   for (const q in questions) {
-    out[q] = {
-      buzzes: questions[q].buzzes
-    };
+    out[q] = { buzzes: questions[q].buzzes };
   }
   return out;
 }
