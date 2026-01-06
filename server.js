@@ -10,10 +10,17 @@ const PORT = 8080;
 /* ===================== HTTP SERVER ===================== */
 
 const server = http.createServer((req, res) => {
-  let filePath = path.join(__dirname, "public", req.url);
+  let filePath;
 
-  if (req.url === "/") {
+  // ---------- ROUTES ----------
+  if (req.url === "/" || req.url === "/admin") {
     filePath = path.join(__dirname, "public", "admin.html");
+  } 
+  else if (req.url === "/team") {
+    filePath = path.join(__dirname, "public", "index.html");
+  } 
+  else {
+    filePath = path.join(__dirname, "public", req.url);
   }
 
   const ext = path.extname(filePath);
