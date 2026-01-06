@@ -1,61 +1,222 @@
+/* =========================
+   ROOT VARIABLES
+========================= */
+:root {
+  --bg: #0b1220;
+  --panel: #111827;
+  --panel-light: #1f2937;
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --warning: #facc15;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --radius: 14px;
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  background: #111;
-  color: #fff;
-  font-family: sans-serif;
-  padding: 30px;
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #1e293b, #020617);
+  color: var(--text);
+  padding: 2.5rem;
 }
 
+/* =========================
+   HEADINGS
+========================= */
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+  color: var(--muted);
+}
+
+/* =========================
+   JOIN PANEL
+========================= */
+#join {
+  background: var(--panel);
+  padding: 2rem;
+  border-radius: var(--radius);
+  max-width: 500px;
+  box-shadow: var(--shadow);
+}
+
+/* =========================
+   INPUT
+========================= */
 input {
-  padding: 10px;
-  font-size: 16px;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: var(--text);
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
+input::placeholder {
+  color: #64748b;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* =========================
+   BUTTONS
+========================= */
 button {
-  padding: 10px 15px;
-  font-size: 16px;
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  margin-left: 10px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* Primary button */
+#joinBtn,
+#nextQuestion {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+}
+
+#nextQuestion:hover {
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* Danger button */
+#resetQuestion {
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+  color: white;
+}
+
+#resetQuestion:hover {
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+#dashboard {
+  margin-top: 2rem;
+  background: var(--panel);
+  padding: 2.2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 800px;
+}
+
+/* Session label highlight */
+#sessionLabel {
+  color: var(--success);
+  font-weight: 700;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* =========================
+   RANKING PANEL
+========================= */
+.ranking {
+  background: var(--panel-light);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin-top: 1rem;
+}
+
+/* =========================
+   RANK ROWS
+========================= */
+.rank {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.7rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #020617;
+  border: 1px solid #1f2937;
+}
+
+/* Top ranks */
+.rank.first {
+  background: linear-gradient(135deg, #3f3f00, #1a1a00);
+  border: 1px solid gold;
+  font-weight: 700;
+}
+
+.rank.second {
+  background: #111827;
+}
+
+.rank.third {
+  background: #0f172a;
+}
+
+/* Text inside rank */
+.rank span {
+  opacity: 0.9;
+}
+
+/* =========================
+   HIDDEN
+========================= */
 .hidden {
   display: none;
 }
 
-.controls {
-  margin: 20px 0;
-}
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  body {
+    padding: 1.5rem;
+  }
 
-/* Ranking box */
-.ranking {
-  background: #1e1e1e;
-  padding: 15px;
-  border-radius: 8px;
-}
+  .controls {
+    flex-direction: column;
+  }
 
-/* Rank rows */
-.rank {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  font-size: 15px;
-}
-
-/* Highlight top ranks */
-.rank.first {
-  background: #2c2c00;
-  border: 1px solid gold;
-}
-
-.rank.second {
-  background: #222;
-}
-
-.rank.third {
-  background: #1a1a1a;
-}
-
-.rank span {
-  opacity: 0.9;
+  button {
+    width: 100%;
+  }
 }
