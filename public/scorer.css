@@ -151,6 +151,15 @@ body {
 .manual button:hover {
   filter: brightness(1.1);
 }
+.team input[type="text"] {
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 6px;
+  color: #e5e7eb;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.95rem;
+}
+
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 480px) {
@@ -158,3 +167,5 @@ body {
     padding: 1.2rem;
   }
 }
+
+

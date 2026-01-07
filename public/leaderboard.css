@@ -104,6 +104,20 @@ body {
   animation: fadeIn 0.4s ease;
 }
 
+.podium-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.podium-row .podium-card {
+  flex: 1;
+  max-width: calc(420px / var(--count));
+  min-width: 160px;
+}
+
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
