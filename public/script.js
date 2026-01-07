@@ -17,9 +17,11 @@ joinBtn.onclick = () => {
   const teamName = teamInput.value.trim();
   if (!sessionId || !teamName) return;
 
-  socket = new WebSocket(
-    `ws://${location.hostname}:8080/?role=team&session=${sessionId}&team=${teamName}`
-  );
+  const protocol = location.protocol === "https:" ? "wss" : "ws";
+
+ socket = new WebSocket(
+  `${protocol}://${location.host}/?role=scorer&session=${sessionId}`
+);
 
   socket.onopen = () => {
     joinDiv.classList.add("hidden");

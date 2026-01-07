@@ -1,6 +1,8 @@
 const sessionId = prompt("Session ID?");
+const protocol = location.protocol === "https:" ? "wss" : "ws";
+
 const socket = new WebSocket(
-  `ws://${location.hostname}:8080/?role=scorer&session=${sessionId}`
+  `${protocol}://${location.host}/?role=scorer&session=${sessionId}`
 );
 
 const teamsDiv = document.getElementById("teams");

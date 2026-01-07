@@ -1,6 +1,10 @@
 const sessionId = prompt("Session ID?");
+const protocol = location.protocol === "https:" ? "wss" : "ws";
+
+
+
 const socket = new WebSocket(
-  `ws://${location.hostname}:8080/?role=viewer&session=${sessionId}`
+  `${protocol}://${location.host}/?role=scorer&session=${sessionId}`
 );
 
 const podium = document.getElementById("podium");
