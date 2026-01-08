@@ -1,6 +1,9 @@
 let socket;
 let locked = false;
 
+const ADMIN_CODE = "jayam@123"; // 🔒 change this
+
+
 const joinDiv = document.getElementById("join");
 const buzzerScreen = document.getElementById("buzzerScreen");
 
@@ -11,6 +14,20 @@ const joinBtn = document.getElementById("joinBtn");
 const buzzer = document.getElementById("buzzer");
 const status = document.getElementById("status");
 const teamLabel = document.getElementById("teamLabel");
+
+const adminBtn = document.getElementById("adminAccessBtn");
+
+adminBtn.onclick = () => {
+  const code = prompt("Enter Admin Code:");
+  if (!code) return;
+
+  if (code === ADMIN_CODE) {
+    window.location.href = "/admin";
+  } else {
+    alert("❌ Invalid admin code");
+  }
+};
+
 
 joinBtn.onclick = () => {
   const sessionId = sessionInput.value.trim();

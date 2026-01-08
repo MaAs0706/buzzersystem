@@ -184,6 +184,22 @@ button:hover {
   font-weight: 700;
 }
 
+.nav {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.nav button {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: none;
+  background: #1f2937;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+
 .rank.second {
   background: #111827;
 }

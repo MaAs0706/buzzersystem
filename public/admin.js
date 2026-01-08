@@ -1,6 +1,9 @@
 let socket;
 let currentQuestion = 1;
 
+const ADMIN_CODE = "QUIZ-ADMIN-2026"; // 🔒 change this
+
+
 const joinDiv = document.getElementById("join");
 const dashboard = document.getElementById("dashboard");
 
@@ -14,8 +17,18 @@ const buzzLog = document.getElementById("buzzLog");
 const nextQuestionBtn = document.getElementById("nextQuestion");
 const resetQuestionBtn = document.getElementById("resetQuestion");
 
+document.getElementById("goTeam").onclick = () => {
+  window.location.href = "/team";
+};
+
+document.getElementById("goScorer").onclick = () => {
+  window.location.href = "/scorer";
+};
+
+
 /* UI expects: questionNumber -> array of buzzes */
 const buzzesByQuestion = {};
+
 
 joinBtn.onclick = () => {
   const sessionId = sessionInput.value.trim();

@@ -126,6 +126,20 @@ input:focus {
     
 
 }
+.admin-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: #1f2937;
+  color: #e5e7eb;
+  cursor: pointer;
+  opacity: 0.85;
+}
+.admin-btn:hover {
+  opacity: 1;
+}
+
 
 
 .buzzer.locked {
